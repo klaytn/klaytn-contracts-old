@@ -1,0 +1,37 @@
+{
+  "name": "klaytn-contract",
+  "version": "1.0.0",
+  "description": "various contracts for Klaytn",
+  "repository": "https://github.com/klaytn/klaytn-contracts.git",
+  "author": "Klaytn",
+  "license": "MIT",
+  "scripts": {
+    "build": "truffle compile",
+    "test": "concurrently --success first --kill-others \"yarn run:ganache\" \"yarn test:ganache\"",
+    "run:ganache": "ganache-cli -l 80000000 -q -k constantinople",
+    "run:klaytn": "./test/prepare.sh",
+    "run:klaytn:start": "./test/prepare.sh",
+    "run:klaytn:stop": "./test/stop.sh",
+    "run:klaytn:resume": "./test/resume.sh",
+    "run:klaytn:terminate": "./test/terminate.sh",
+    "run:klaytn:log": "find -s ./test -name tee.*.log | tail -1 | xargs -I{} tail -f {}",
+    "run:klaytn:cleanlog": "find -s ./test -name tee.*.log -delete",
+    "test:ganache": "truffle test",
+    "test:klaytn": "truffle test --network klaytn",
+    "deploy:klaytn": "truffle deploy --network klaytn",
+    "deploy:baobab": "truffle deploy --network baobab",
+    "deploy:cypress": "truffle deploy --network cypress"
+  },
+  "dependencies": {
+    "caver-js": "^1.5.0",
+    "caver-js-ext-kas": "^1.0.1",
+    "truffle-hdwallet-provider-klaytn": "^1.0.13-a"
+  },
+  "devDependencies": {
+    "concurrently": "^5.3.0",
+    "ganache-cli": "^6.12.1",
+    "truffle": "^5.1.23",
+    "openzeppelin-test-helpers": "^0.3.2",
+    "truffle-assertions": "^0.9.2"
+  }
+}
