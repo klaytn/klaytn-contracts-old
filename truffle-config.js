@@ -36,7 +36,7 @@ const option = {
   ],
   keepAlive: false,
 }
-const HDWalletProvider = require("truffle-hdwallet-provider-klaytn");
+const HDWalletProvider = require("@truffle/hdwallet-provider");
 const privateKey = "0x123 ...";
 
 module.exports = {
