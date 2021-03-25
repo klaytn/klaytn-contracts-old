@@ -29,15 +29,9 @@ const Caver = require('caver-js')
 const accessKeyId = "ACCESS_KEY";
 const secretAccessKey = "SECRET_KEY";
 
-const option = {
-  headers: [
-    { name: 'Authorization', value: 'Basic ' + Buffer.from(accessKeyId + ':' + secretAccessKey).toString('base64') },
-    { name: 'x-chain-id', value: '1001' }
-  ],
-  keepAlive: false,
-}
 const HDWalletProvider = require("truffle-hdwallet-provider-klaytn");
-const privateKey = "0x123 ...";
+const privateKey = "0x123";
+const cypressPrivateKey = "0x456";
 
 module.exports = {
   /**
@@ -76,7 +70,13 @@ module.exports = {
     },
     kasBaobab: {
       provider: () => {
-        option.headers['x-chain-id'] = '1001';
+        const option = {
+          headers: [
+            { name: 'Authorization', value: 'Basic ' + Buffer.from(accessKeyId + ':' + secretAccessKey).toString('base64') },
+            { name: 'x-chain-id', value: '1001' }
+          ],
+          keepAlive: false,
+        }
         return new HDWalletProvider(privateKey, new Caver.providers.HttpProvider("https://node-api.klaytnapi.com/v1/klaytn", option))
       },
       network_id: '1001', //Klaytn baobab testnet's network id
@@ -85,8 +85,14 @@ module.exports = {
     },
     kasCypress: {
       provider: () => {
-        option.headers['x-chain-id'] = '8217';
-        return new HDWalletProvider(privateKey, new Caver.providers.HttpProvider("https://node-api.klaytnapi.com/v1/klaytn", option))
+        const option = {
+          headers: [
+            { name: 'Authorization', value: 'Basic ' + Buffer.from(accessKeyId + ':' + secretAccessKey).toString('base64') },
+            { name: 'x-chain-id', value: '8217' }
+          ],
+          keepAlive: false,
+        }
+        return new HDWalletProvider(cypressPrivateKey, new Caver.providers.HttpProvider("https://node-api.klaytnapi.com/v1/klaytn", option))
       },
       network_id: '8217', //Klaytn baobab testnet's network id
       gas: '8500000',
