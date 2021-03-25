@@ -5,10 +5,6 @@
   "files": [
     "**/*.sol"
   ],
-  "scripts": {
-    "prepare": "bash ../scripts/prepare-contracts-package.sh",
-    "prepare-docs": "cd ..; npm run prepare-docs"
-  },
   "repository": {
     "type": "git",
     "url": "https://github.com/klaytn/klaytn-contracts.git"
