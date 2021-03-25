@@ -5,6 +5,10 @@
   "repository": "https://github.com/klaytn/klaytn-contracts.git",
   "author": "Klaytn",
   "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/klaytn/klaytn-contracts/issues"
+  },
+  "homepage":"https://github.com/klaytn/klaytn-contracts",
   "scripts": {
     "build": "truffle compile",
     "test": "concurrently --success first --kill-others \"yarn run:ganache\" \"yarn test:ganache\"",
