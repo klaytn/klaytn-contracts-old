@@ -30,7 +30,7 @@ contract KIP37 is Context, KIP13, IKIP37, IKIP37MetadataURI {
     mapping(uint256 => uint256) private _totalSupply;
 
     // Used as the URI for all token types by relying on ID substition, e.g. https://token-cdn-domain/{id}.json
-    string private _uri;
+    string internal _uri;
 
     /*
      *     bytes4(keccak256('balanceOf(address,uint256)')) == 0x00fdd58e
@@ -89,7 +89,7 @@ contract KIP37 is Context, KIP13, IKIP37, IKIP37MetadataURI {
      *
      * This implementation returns the same URI for *all* token types. It relies
      * on the token type ID substituion mechanism
-     * https://eips.ethereum.org/EIPS/eip-1155#metadata[defined in the EIP].
+     * http://kips.klaytn.com/KIPs/kip-37#metadata
      *
      * Clients calling this function must replace the `\{id\}` substring with the
      * actual token type ID.

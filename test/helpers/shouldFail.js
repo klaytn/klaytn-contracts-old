@@ -15,6 +15,10 @@ async function shouldFailWithMessage (promise, message) {
         }, function (err, result) {
           expect(result.result).to.include(message, `txHash: ${error.receipt.transactionHash}.`);
         })
+      } else if(error.reason) {
+        expect(error.reason).to.include(message)
+      } else {
+        expect.fail('unprocessed error', error)
       }
     }
     return;

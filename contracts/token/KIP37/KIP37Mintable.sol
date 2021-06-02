@@ -21,6 +21,8 @@ contract KIP37Mintable is KIP37, MinterRole {
     // id => creators
     mapping(uint256 => address) public creators;
 
+    mapping(uint256 => string) _uris;
+
     constructor() public {
         _registerInterface(_INTERFACE_ID_KIP37_MINTABLE);
     }
@@ -28,6 +30,25 @@ contract KIP37Mintable is KIP37, MinterRole {
     function _exists(uint256 tokenId) internal view returns (bool) {
         address creator = creators[tokenId];
         return creator != address(0);
+    }
+
+    /**
+     * @dev See {IKIP37MetadataURI-uri}.
+     *
+     * This implementation returns the same URI for *all* token types. It relies
+     * on the token type ID substituion mechanism
+     * http://kips.klaytn.com/KIPs/kip-37#metadata
+     *
+     * Clients calling this function must replace the `\{id\}` substring with the
+     * actual token type ID.
+     */
+    function uri(uint256 tokenId) external view returns (string memory) {
+        string memory customURI = string(_uris[tokenId]);
+        if(bytes(customURI).length != 0) {
+            return customURI;
+        }
+
+        return _uri;
     }
 
     /// @notice Creates a new token type and assigns _initialSupply to the minter.
@@ -48,6 +69,7 @@ contract KIP37Mintable is KIP37, MinterRole {
         _mint(msg.sender, _id, _initialSupply, "");
 
         if (bytes(_uri).length > 0) {
+            _uris[_id] = _uri;
             emit URI(_uri, _id);
         }
     }
