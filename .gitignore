@@ -3,3 +3,4 @@ privateKeys.js
 package-lock.json
 test/local-klaytn-deploy
 build
+contracts/**/artifacts/**
