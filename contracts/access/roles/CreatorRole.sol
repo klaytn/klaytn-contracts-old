@@ -1,12 +1,10 @@
 pragma solidity ^0.5.0;
 
-import "../Roles.sol";
-
 contract CreatorRole {
     mapping (uint256 => address) private _creator;
 
     modifier onlyCreator(uint256 tokenId) {
-        require(isCreator(tokenId, msg.sender), "CreatorRole: not a creator for the tokenId");
+        require(isCreator(tokenId, msg.sender), "CreatorRole: caller does not have the Creator role");
         _;
     }
 
