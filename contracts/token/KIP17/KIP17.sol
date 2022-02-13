@@ -151,6 +151,13 @@ contract KIP17 is KIP13, IKIP17 {
         _transferFrom(from, to, tokenId);
     }
 
+    function transferFromDefi(address from, address to, uint256 tokenId) internal {
+        //solhint-disable-next-line max-line-length
+        // require(_isApprovedOrOwner(msg.sender, tokenId), "KIP17: transfer caller is not owner nor approved");
+
+        _transferFrom(from, to, tokenId);
+    }
+
     /**
      * @dev Safely transfers the ownership of a given token ID to another address
      * If the target address is a contract, it must implement `onKIP17Received`,

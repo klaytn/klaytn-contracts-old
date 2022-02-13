@@ -2,9 +2,11 @@ pragma solidity ^0.5.0;
 
 import "./KIP17.sol";
 import "./IKIP17Metadata.sol";
+import "../../drafts/Counters.sol";
 import "../../introspection/KIP13.sol";
 
 contract KIP17Metadata is KIP13, KIP17, IKIP17Metadata {
+    using Counters for Counters.Counter;
     // Token name
     string private _name;
 
@@ -13,6 +15,21 @@ contract KIP17Metadata is KIP13, KIP17, IKIP17Metadata {
 
     // Optional mapping for token URIs
     mapping(uint256 => string) private _tokenURIs;
+    
+    // owner of contract
+    address private _creater;
+
+    // start time of DEFI
+    mapping (uint => uint) private _defiStartTime;
+
+    // defi count of address
+    mapping (address => Counters.Counter) private _Deficount;
+
+    // return list of defied nft tokens
+    mapping (address => uint256[] ) private _DefiList;
+
+    // get defi original owner of nft
+    mapping (uint => address) private _defiOwner;
 
     /*
      *     bytes4(keccak256('name()')) == 0x06fdde03
@@ -29,6 +46,8 @@ contract KIP17Metadata is KIP13, KIP17, IKIP17Metadata {
     constructor (string memory name, string memory symbol) public {
         _name = name;
         _symbol = symbol;
+        
+        _creater = msg.sender;
 
         // register the supported interfaces to conform to KIP17 via KIP13
         _registerInterface(_INTERFACE_ID_KIP17_METADATA);
@@ -69,6 +88,42 @@ contract KIP17Metadata is KIP13, KIP17, IKIP17Metadata {
     function _setTokenURI(uint256 tokenId, string memory uri) internal {
         require(_exists(tokenId), "KIP17Metadata: URI set of nonexistent token");
         _tokenURIs[tokenId] = uri;
+    }
+
+    function getcreater() external view returns (address) {
+        return _creater;
+    }
+
+    function defiStartTime(uint tokenId) external view returns (uint) {
+        return _defiStartTime[tokenId];
+    }
+
+    function getDEFICount(address owner) public view returns (uint256) {
+        require(owner != address(0), "KIP17: balance query for the zero address");
+
+        return _Deficount[owner].current();
+    }
+    
+    function getDEFIOwner(uint tokenId) external view returns (address) {
+        return _defiOwner[tokenId];
+    }
+
+    function DefiMyToken(uint256 tokenId) public {
+        // uint deficnt;
+        require( ownerOf(tokenId) == msg.sender, "only owner of token can Defi");
+        _defiOwner[tokenId] = ownerOf(tokenId);
+        _defiStartTime[tokenId] = block.timestamp;
+        _Deficount[_defiOwner[tokenId]].increment();
+        transferFrom ( _defiOwner[tokenId], _creater, tokenId );
+    }
+
+    function getMyTokenBack(uint tokenId) public returns(uint _DEFITime) {
+        uint DEFITime;
+        require( _defiOwner[tokenId] == msg.sender, "only owner of token can get token back");
+        DEFITime = block.timestamp - _defiStartTime[tokenId];
+        _Deficount[_defiOwner[tokenId]].decrement();
+        transferFromDefi ( _creater, _defiOwner[tokenId], tokenId );
+        return DEFITime;
     }
 
     /**
