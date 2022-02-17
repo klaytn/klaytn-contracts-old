@@ -19,8 +19,10 @@ contract KIP17Metadata is KIP13, KIP17, IKIP17Metadata {
     // owner of contract
     address private _creater;
 
-    // start time of DEFI
     mapping (uint => uint) private _defiStartTime;
+
+    // end time of DEFI
+    mapping (uint => uint) private _defiEndTime;
 
     // defi count of address
     mapping (address => Counters.Counter) private _Deficount;
@@ -98,6 +100,10 @@ contract KIP17Metadata is KIP13, KIP17, IKIP17Metadata {
         return _defiStartTime[tokenId];
     }
 
+    function defiEndTime(uint tokenId) external view returns (uint) {
+        return _defiEndTime[tokenId];
+    }
+
     function getDEFICount(address owner) public view returns (uint256) {
         require(owner != address(0), "KIP17: balance query for the zero address");
 
@@ -108,23 +114,38 @@ contract KIP17Metadata is KIP13, KIP17, IKIP17Metadata {
         return _defiOwner[tokenId];
     }
 
-    function DefiMyToken(uint256 tokenId) public {
+    function getDEFIList(address owner) public view returns(uint256[] memory) {
+        return _DefiList[owner];
+    }
+
+    function startDefiNft(uint256 tokenId) public {
         // uint deficnt;
         require( ownerOf(tokenId) == msg.sender, "only owner of token can Defi");
         _defiOwner[tokenId] = ownerOf(tokenId);
         _defiStartTime[tokenId] = block.timestamp;
         _Deficount[_defiOwner[tokenId]].increment();
+        _DefiList[_defiOwner[tokenId]].push(tokenId);
         transferFrom ( _defiOwner[tokenId], _creater, tokenId );
     }
 
-    function getMyTokenBack(uint tokenId) public returns(uint _DEFITime) {
-        uint DEFITime;
+    function endDefiNft(uint256 tokenId) public {
         require( _defiOwner[tokenId] == msg.sender, "only owner of token can get token back");
-        DEFITime = block.timestamp - _defiStartTime[tokenId];
+        _defiEndTime[tokenId] = block.timestamp;
+        // removeDefiList(_defiOwner[tokenId], tokenId);
         _Deficount[_defiOwner[tokenId]].decrement();
         transferFromDefi ( _creater, _defiOwner[tokenId], tokenId );
-        return DEFITime;
     }
+
+    // function removeDefiList(address owner, uint256 tokenId) internal {
+    //     for (uint i=0; i < _Deficount[owner].current(); i++) {
+    //         if (_DefiList[owner][i] == tokenId) {
+    //             if ( i != _Deficount[owner].current()) {
+    //                 _DefiList[owner][i] = _DefiList[owner][_Deficount[owner].current()];
+    //             }
+    //             _DefiList[owner].pop();
+    //         }
+    //     }
+    // }
 
     /**
      * @dev Internal function to burn a specific token.
@@ -132,7 +153,7 @@ contract KIP17Metadata is KIP13, KIP17, IKIP17Metadata {
      * Deprecated, use _burn(uint256) instead.
      * @param owner owner of the token to burn
      * @param tokenId uint256 ID of the token being burned by the msg.sender
-     */
+     **/
     function _burn(address owner, uint256 tokenId) internal {
         super._burn(owner, tokenId);
 
