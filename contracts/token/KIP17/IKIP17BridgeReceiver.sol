@@ -16,28 +16,6 @@
 
 pragma solidity 0.5.6;
 
-import "./KIP17.sol";
-import "./IKIP17BridgeReceiver.sol";
-import "../../ownership/Ownable.sol";
-
-contract KIP17ServiceChain is KIP17, Ownable {
-    using Address for address;
-    address public bridge;
-
-    constructor(address _bridge) internal {
-        if (!_bridge.isContract()) {
-            revert("bridge is not a contract");
-        }
-        bridge = _bridge;
-    }
-
-    function setBridge(address _bridge) public onlyOwner {
-        bridge = _bridge;
-    }
-
-    function requestValueTransfer(uint256 _uid, address _to, bytes calldata _extraData) external {
-        transferFrom(msg.sender, bridge, _uid);
-
-        IKIP17BridgeReceiver(bridge).onKIP17Received(msg.sender, _uid, _to, _extraData);
-    }
+contract IKIP17BridgeReceiver {
+    function onKIP17Received(address _from, uint256 _tokenId, address _to, bytes memory _extraData) public;
 }
