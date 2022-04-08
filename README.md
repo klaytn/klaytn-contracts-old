@@ -18,6 +18,7 @@ The following packages should be installed before using this source code.
 * Node v10.21.0
 * Truffle v5.1.61
 * ganache-cli v6.12.1
+* jq
 
 # Package Installation
 
@@ -27,6 +28,11 @@ Please install node packages first.
 $ npm install
 $ npm install -g truffle@v5.1.61
 $ npm install -g ganache-cli@v6.12.1
+```
+
+The package jq is also required. You can install jq by the following command in MacOS:
+```bash
+$ brew install jq
 ```
 
 # How to run Ganache
