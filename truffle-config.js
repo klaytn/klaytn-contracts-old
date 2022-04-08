@@ -81,7 +81,7 @@ module.exports = {
       },
       network_id: '1001', //Klaytn baobab testnet's network id
       gas: '8500000',
-      gasPrice:'25000000000'
+      gasPrice:'750000000000'
     },
     kasCypress: {
       provider: () => {
@@ -96,7 +96,7 @@ module.exports = {
       },
       network_id: '8217', //Klaytn baobab testnet's network id
       gas: '8500000',
-      gasPrice:'25000000000'
+      gasPrice:'750000000000'
     },
     baobab: {
       provider: () => { return new HDWalletProvider(privateKey, "http://your.baobab.en:8551") },
